@@ -6,14 +6,14 @@
           <el-form class="login_form">
             <h1>Hello</h1>
             <h2>后台管理系统</h2>
-            <el-form-item label="用户名">
+            <el-form-item>
               <el-input :prefix-icon="User"></el-input>
             </el-form-item>
-            <el-form-item label="用户名">
-              <el-input type="password"></el-input>
+            <el-form-item>
+              <el-input type="password" :prefix-icon="Lock" show-password></el-input>
             </el-form-item>
-             <el-form-item class="login_btn">
-              <el-button type="primary" :prefix-icon="Lock">登录</el-button>
+             <el-form-item>
+              <el-button class="login_btn" type="primary">登录</el-button>
             </el-form-item>
           </el-form>
       </el-col>
