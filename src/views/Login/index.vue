@@ -37,9 +37,10 @@ import { Calendar, Search, User, Lock } from '@element-plus/icons-vue'
 import { reactive, ref } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import { loginApi } from '../../apis/login'
-import { log } from 'console'
 import { ElNotification } from 'element-plus'
+import { useRouter } from 'vue-router'
 
+const userouter = useRouter()
 // Define form data
 const loginForm = reactive({
   username: '',
@@ -72,6 +73,13 @@ const handleLogin = async () => {
     if (valid) {
       loginApi(loginForm.username, loginForm.password).then(res => {
         console.log(res)
+        ElNotification({
+          title: 'Success',
+          message: "登录成功",
+          type: 'success',
+          duration: 3000
+        })
+        userouter.push('/')
       }).catch(err => {
         ElNotification({
           title: 'Error',

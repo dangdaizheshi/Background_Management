@@ -1,26 +1,28 @@
 <template>
   <div class="main">
     <div class="left-section">
-      <span class="workspace">
+      <div class="workspace">
         <el-icon class="workspace-icon"><Orange /></el-icon>
         工作区
-      </span>
+      </div>
       <div class="toolbar-icons">
         <el-icon class="toolbar-icon"><Fold /></el-icon>
-        <el-icon class="toolbar-icon"><RefreshRight /></el-icon>
+        <el-tooltip effect="dark" content="刷新" placement="bottom">
+          <el-icon class="toolbar-icon" @click = "refresh()"><RefreshRight /></el-icon>
+        </el-tooltip>
       </div>
     </div>
-    
     <div class="right-section">
-      <el-icon class="toolbar-icon fullscreen-icon"><FullScreen /></el-icon>
+      <el-tooltip effect="dark" content="全屏" placement="bottom" v-if="isFullScreen === false"><el-icon class="toolbar-icon fullscreen-icon" @click = "toggleFullScreen()"><FullScreen /></el-icon></el-tooltip>
+      <el-tooltip effect="dark" content="退出全屏" placement="bottom" v-else><el-icon class="toolbar-icon fullscreen-icon" @click = "toggleFullScreen()"><Aim /></el-icon></el-tooltip>
       <el-dropdown>
-        <span class="el-dropdown-link">
+        <div class="el-dropdown-link">
           <el-avatar class="user-avatar" :size="32" :src="circleUrl" />
           <span class="username">当代哲师</span>
           <el-icon class="el-icon--right arrow-icon">
             <arrow-down />
           </el-icon>
-        </span>
+        </div>
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item>修改密码</el-dropdown-item>
@@ -34,8 +36,20 @@
 
 <script setup>
 import { ref } from 'vue'
-import { ArrowDown, Fold, Orange, RefreshRight, FullScreen } from '@element-plus/icons-vue'
+import { ArrowDown, Fold, Orange, RefreshRight, FullScreen, ArrowUp, Aim } from '@element-plus/icons-vue'
 const circleUrl = ref('../../../../assets/images/11.PNG');
+const isFullScreen = ref(false);
+function refresh() {
+  location.reload();
+}
+function toggleFullScreen() {
+  if (document.fullscreenElement) {
+    document.exitFullscreen();
+  } else {
+    document.documentElement.requestFullscreen();
+  }
+  isFullScreen.value = !isFullScreen.value;
+}
 </script>
 
 <style lang="scss" scoped>
@@ -43,7 +57,7 @@ const circleUrl = ref('../../../../assets/images/11.PNG');
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 20px;
+  padding: 0 20px 0 65px;
   background: linear-gradient(90deg, #1e88e5, #42a5f5);
   color: white;
   height: 64px;
@@ -65,18 +79,18 @@ const circleUrl = ref('../../../../assets/images/11.PNG');
       font-size: 18px;
       font-weight: 500;
       gap: 8px;
-      
       .workspace-icon {
-        font-size: 20px;
+        font-size: 23px;
       }
     }
     
     .toolbar-icons {
+      margin-left: 50px;
       display: flex;
-      gap: 15px;
+      gap: 1px;
       
       .toolbar-icon {
-        font-size: 18px;
+        font-size: 20px;
         cursor: pointer;
         padding: 6px;
         border-radius: 4px;
