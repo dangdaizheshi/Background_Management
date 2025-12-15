@@ -3,19 +3,30 @@
     <el-row>
       <el-col :span="12" :xs="0">左侧区域</el-col>
       <el-col :span="12" :xs="24">
-          <el-form class="login_form">
-            <h1>Hello</h1>
-            <h2>后台管理系统</h2>
-            <el-form-item>
-              <el-input :prefix-icon="User"></el-input>
-            </el-form-item>
-            <el-form-item>
-              <el-input type="password" :prefix-icon="Lock" show-password></el-input>
-            </el-form-item>
-             <el-form-item>
-              <el-button class="login_btn" type="primary">登录</el-button>
-            </el-form-item>
-          </el-form>
+        <el-form class="login_form" :model="loginForm" :rules="rules" ref="formRef">
+          <h1>Hello</h1>
+          <h2>后台管理系统</h2>
+          <el-form-item prop="username">
+            <el-input 
+              v-model="loginForm.username"
+              autofocus
+              :prefix-icon="User" 
+              placeholder="请输入用户名">
+            </el-input>
+          </el-form-item>
+          <el-form-item prop="password">
+            <el-input 
+              v-model="loginForm.password"
+              type="password" 
+              :prefix-icon="Lock" 
+              show-password
+              placeholder="请输入密码">
+            </el-input>
+          </el-form-item>
+           <el-form-item>
+            <el-button class="login_btn" type="primary" @click="handleLogin">登录</el-button>
+          </el-form-item>
+        </el-form>
       </el-col>
     </el-row>
   </div>
@@ -23,6 +34,46 @@
 
 <script setup lang="ts">
 import { Calendar, Search, User, Lock } from '@element-plus/icons-vue'
+import { reactive, ref } from 'vue'
+import type { FormInstance, FormRules } from 'element-plus'
+
+// Define form data
+const loginForm = reactive({
+  username: '',
+  password: ''
+})
+
+// Form reference for validation
+const formRef = ref<FormInstance>()
+
+// Validation rules
+const rules = reactive<FormRules>({
+  username: [
+    { required: true, message: '请输入用户名', trigger: 'blur' },
+    { min: 3, max: 5, message: '用户名长度应在3到5个字符之间', trigger: 'blur' }
+  ],
+  password: [
+    { required: true, message: '请输入密码', trigger: 'blur' },
+    {
+      pattern: /^[a-zA-Z0-9_!@#$%^&*(),.?":{}|<>]+$/,
+      message: '密码只能包含数字、字母、标点符号和下划线',
+      trigger: 'blur'
+    }
+  ]
+})
+
+// Handle login
+const handleLogin = async () => {
+  if (!formRef.value) return
+  await formRef.value.validate((valid, fields) => {
+    if (valid) {
+      console.log('登录成功', loginForm)
+      // TODO: Implement login logic here
+    } else {
+      console.log('验证失败', fields)
+    }
+  })
+}
 </script>
 
 <style lang="scss" scoped>
