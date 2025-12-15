@@ -36,6 +36,9 @@
 import { Calendar, Search, User, Lock } from '@element-plus/icons-vue'
 import { reactive, ref } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
+import { loginApi } from '../../apis/login'
+import { log } from 'console'
+import { ElNotification } from 'element-plus'
 
 // Define form data
 const loginForm = reactive({
@@ -67,8 +70,16 @@ const handleLogin = async () => {
   if (!formRef.value) return
   await formRef.value.validate((valid, fields) => {
     if (valid) {
-      console.log('登录成功', loginForm)
-      // TODO: Implement login logic here
+      loginApi(loginForm.username, loginForm.password).then(res => {
+        console.log(res)
+      }).catch(err => {
+        ElNotification({
+          title: 'Error',
+          message: err.response.data.msg,
+          type: 'error',
+          duration: 3000
+        })
+      })
     } else {
       console.log('验证失败', fields)
     }
