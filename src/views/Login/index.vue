@@ -24,7 +24,7 @@
             </el-input>
           </el-form-item>
            <el-form-item>
-            <el-button class="login_btn" type="primary" @click="handleLogin">登录</el-button>
+            <el-button class="login_btn" type="primary" @click="handleLogin" :loading = "loading">登录</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -36,9 +36,10 @@
 import { Calendar, Search, User, Lock } from '@element-plus/icons-vue'
 import { reactive, ref } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
-import { loginApi } from '../../apis/login'
-import { ElNotification } from 'element-plus'
+import { loginApi, getUserInfoApi } from '../../apis/login'
 import { useRouter } from 'vue-router'
+import tokenUtils from '../../utils/tokenUtil'
+import notificationUtils from '../../utils/notificationUtils'
 
 const userouter = useRouter()
 // Define form data
@@ -66,29 +67,33 @@ const rules = reactive<FormRules>({
   ]
 })
 
+const loading = ref(false)
+
 // Handle login
 const handleLogin = async () => {
   if (!formRef.value) return
   await formRef.value.validate((valid, fields) => {
     if (valid) {
-      loginApi(loginForm.username, loginForm.password).then(res => {
+        loading.value = true
+        loginApi(loginForm.username, loginForm.password).then(res => {
         console.log(res)
-        ElNotification({
-          title: 'Success',
-          message: "登录成功",
-          type: 'success',
-          duration: 3000
+        // ElNotification({
+        //   title: 'Success',
+        //   message: "登录成功",
+        //   type: 'success',
+        //   duration: 3000
+        // })
+        notificationUtils.toast('success', '登录成功')
+        tokenUtils.setToken(res.token)
+        getUserInfoApi().then(res2 => {
+          console.log(res2)
         })
         userouter.push('/')
-      }).catch(err => {
-        ElNotification({
-          title: 'Error',
-          message: err.response.data.msg,
-          type: 'error',
-          duration: 3000
-        })
+      }).finally(() => {
+        loading.value = false
       })
-    } else {
+    } 
+    else {
       console.log('验证失败', fields)
     }
   })

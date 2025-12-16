@@ -57,7 +57,7 @@ function toggleFullScreen() {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 20px 0 65px;
+  padding: 0 20px 0 40px;
   background: linear-gradient(90deg, #1e88e5, #42a5f5);
   color: white;
   height: 64px;
@@ -76,11 +76,12 @@ function toggleFullScreen() {
     .workspace {
       display: flex;
       align-items: center;
-      font-size: 18px;
+      font-size: 20px;
       font-weight: 500;
       gap: 8px;
       .workspace-icon {
         font-size: 23px;
+        vertical-align: bottom;
       }
     }
     

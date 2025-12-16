@@ -10,3 +10,10 @@ export const loginApi = (username: string, password: string) => {
     }
   })
 }
+
+export const getUserInfoApi = () => {
+  return requset({
+    url: '/admin/getinfo',
+    method: 'post'
+  })
+}
