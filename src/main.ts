@@ -8,17 +8,16 @@ import 'virtual:svg-icons-register'
 import SvgIcon from './components/SvgIcon/index.vue'
 import router from './router'
 import { createPinia } from 'pinia'
+import './permission'
 
 const app = createApp(App)
-
+app.use(createPinia())
 app.use(router)
 app.use(ElementPlus)
 app.use(ElementPlus, {
   locale: zhCn,
 })
 app.component('SvgIcon', SvgIcon) // 全局组件注册
-const pinia = createPinia()
-app.use(pinia)
 
 import globalComponent from './components/index'
 app.use(globalComponent)

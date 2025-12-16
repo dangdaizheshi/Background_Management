@@ -26,7 +26,7 @@
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item>修改密码</el-dropdown-item>
-            <el-dropdown-item>退出登录</el-dropdown-item>
+            <el-dropdown-item @click = "exit()">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -37,7 +37,12 @@
 <script setup>
 import { ref } from 'vue'
 import { ArrowDown, Fold, Orange, RefreshRight, FullScreen, ArrowUp, Aim } from '@element-plus/icons-vue'
-const circleUrl = ref('../../../../assets/images/11.PNG');
+import notificationUtils from '../../../utils/notificationUtils';
+import { ElMessage } from 'element-plus'
+import { useRouter } from 'vue-router';
+
+const userouter = useRouter();
+const circleUrl = ref('../../../assets/images/11.PNG');
 const isFullScreen = ref(false);
 function refresh() {
   location.reload();
@@ -50,6 +55,15 @@ function toggleFullScreen() {
   }
   isFullScreen.value = !isFullScreen.value;
 }
+function exit() {
+  notificationUtils.messageBox('warning', '确定要退出登录吗？').then(() => {
+    userouter.push('/login')
+    ElMessage({
+        type: 'success',
+        message: 'Delete completed',
+      })
+  })
+}
 </script>
 
 <style lang="scss" scoped>
@@ -57,7 +71,7 @@ function toggleFullScreen() {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 20px 0 40px;
+  padding: 0 25px 0 40px;
   background: linear-gradient(90deg, #1e88e5, #42a5f5);
   color: white;
   height: 64px;
@@ -138,6 +152,7 @@ function toggleFullScreen() {
       }
       
       .username {
+        color: white;
         font-weight: 500;
         margin-left: 5px;
       }

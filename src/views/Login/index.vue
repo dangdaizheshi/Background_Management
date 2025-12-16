@@ -77,17 +77,8 @@ const handleLogin = async () => {
         loading.value = true
         loginApi(loginForm.username, loginForm.password).then(res => {
         console.log(res)
-        // ElNotification({
-        //   title: 'Success',
-        //   message: "登录成功",
-        //   type: 'success',
-        //   duration: 3000
-        // })
         notificationUtils.toast('success', '登录成功')
         tokenUtils.setToken(res.token)
-        getUserInfoApi().then(res2 => {
-          console.log(res2)
-        })
         userouter.push('/')
       }).finally(() => {
         loading.value = false

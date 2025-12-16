@@ -22,12 +22,6 @@ request.interceptors.request.use(function (config) {
 request.interceptors.response.use(function (response) {
     return response.data.data;
   }, function (error) {
-    // ElNotification({
-    //   title: 'Error',
-    //   message: error.response.data.msg,
-    //   type: 'error',
-    //   duration: 3000
-    // })
     notificationUtils.toast('error', error.response.data.msg)
     return Promise.reject(error);
 });
