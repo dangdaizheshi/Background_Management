@@ -32,16 +32,45 @@
       </el-dropdown>
     </div>
     <el-drawer v-model="drawer" title="修改密码" size="45%" close-on-click-modal="false">
-      <span>Hi there!</span>
+      <el-form :model="loginForm" :rules="rules" ref="formRef" label-width="80px">
+        <el-form-item prop="password" label="原密码">
+          <el-input 
+            v-model="loginForm.password"
+            type="password"
+            autofocus
+            placeholder="请输入原密码"
+            show-password>
+          </el-input>
+        </el-form-item>
+        <el-form-item prop="newPassword" label="新密码">
+          <el-input 
+            v-model="loginForm.newPassword"
+            type="password" 
+            show-password
+            placeholder="请输入新密码">
+          </el-input>
+        </el-form-item>
+        <el-form-item prop="rePassword" label="确认密码">
+          <el-input 
+            v-model="loginForm.rePassword"
+            type="password" 
+            show-password
+            placeholder="请确认新密码">
+          </el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" :loading = "loading" @click="repassword()">提交</el-button>
+        </el-form-item>
+      </el-form>
     </el-drawer>
   </div>
-</template>
+</template> 
 
-<script setup>
-import { ref } from 'vue'
+<script setup lang="ts">
+import { ref, reactive} from 'vue'
 import { ArrowDown, Fold, Orange, RefreshRight, FullScreen, ArrowUp, Aim } from '@element-plus/icons-vue'
 import notificationUtils from '../../../utils/notificationUtils';
-import { ElMessage } from 'element-plus'
+import { ElMessage} from 'element-plus'
 import { useRouter } from 'vue-router';
 import { logoutApi, updatePasswordApi } from '../../../apis/login';
 import tokenUtils from '../../../utils/tokenUtil';
@@ -52,6 +81,39 @@ const userouter = useRouter();
 const circleUrl = ref('../../../assets/images/11.PNG');
 const isFullScreen = ref(false);
 const drawer = ref(false);
+const loading = ref(false);
+const loginForm = reactive({
+  password: '',
+  newPassword: '',
+  rePassword: ''
+})
+const formRef = ref()
+const rules = reactive({
+  password: [
+    { required: true, message: '请输入密码', trigger: 'blur' },
+    {
+      pattern: /^[a-zA-Z0-9_!@#$%^&*(),.?":{}|<>]+$/,
+      message: '密码只能包含数字、字母、标点符号和下划线',
+      trigger: 'blur'
+    }
+  ],
+  newPassword: [
+    { required: true, message: '请输入新密码', trigger: 'blur' },
+    {
+      pattern: /^[a-zA-Z0-9_!@#$%^&*(),.?":{}|<>]+$/,
+      message: '密码只能包含数字、字母、标点符号和下划线',
+      trigger: 'blur'
+    }
+  ],
+  rePassword: [
+    { required: true, message: '请输入新密码', trigger: 'blur' },
+    {
+      pattern: /^[a-zA-Z0-9_!@#$%^&*(),.?":{}|<>]+$/,
+      message: '密码只能包含数字、字母、标点符号和下划线',
+      trigger: 'blur'
+    }
+  ]
+})
 function refresh() {
   location.reload();
 }
@@ -74,7 +136,27 @@ function exit() {
   })
 }
 function updatePassword() {
-  
+  drawer.value = true;
+}
+const repassword = async () => { 
+  if (!formRef.value) return
+  await formRef.value.validate((valid, fields) => {
+    if (valid) {
+      updatePasswordApi(loginForm).then(() => { 
+        loading.value = true;
+        notificationUtils.toast('success', '修改密码成功');
+        drawer.value = false;
+        userStore.removeUserInfo();
+        tokenUtils.removeToken();
+        userouter.push('/login');
+      }).finally(() => {
+        loading.value = false
+      })
+    } 
+    else {
+      console.log('验证失败', fields)
+    }
+  })
 }
 </script>
 

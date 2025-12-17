@@ -9,6 +9,7 @@ import SvgIcon from './components/SvgIcon/index.vue'
 import router from './router'
 import { createPinia } from 'pinia'
 import './permission'
+import 'nprogress/nprogress.css'
 
 const app = createApp(App)
 app.use(createPinia())

@@ -18,7 +18,7 @@
 <script setup lang="ts">
 import FHeader from './components/FHeader.vue'
 import FSide from './components/FSide.vue'
-import FTagList from './components/FTagList.vue';
+import FTagList from './components/FTagList.vue'
 </script>
 
 <style lang="scss" scoped>
