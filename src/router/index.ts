@@ -5,15 +5,24 @@ const router = createRouter({
   routes: [
     {
       path: '/login',
-      component: () => import('../views/Login/index.vue')
+      component: () => import('../views/Login/index.vue'),
+      meta: {
+        title: '登录页'
+      }
     },
     {
       path: '/',
-      component: () => import('../views/Layout/index.vue')
+      component: () => import('../views/Layout/index.vue'),
+      meta: {
+        title: '后台首页'
+      }
     },
     {
       path: '/:pathMatch(.*)*',
-      component: () => import('../views/404/index.vue')
+      component: () => import('../views/404/index.vue'),
+      meta: {
+        title: '无效页面'
+      }
     }
   ],
   // 配置路由切换时页面自动回到顶部

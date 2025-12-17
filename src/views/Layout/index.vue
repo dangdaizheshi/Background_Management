@@ -7,10 +7,10 @@
       <el-aside>
         <f-side />
       </el-aside>
-      <el-xmain>
+      <el-main>
         <f-tag-list />
         <router-view />
-      </el-xmain>
+      </el-main>
     </el-container>
   </el-container>
 </template>

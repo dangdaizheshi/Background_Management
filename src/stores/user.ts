@@ -8,5 +8,8 @@ export const useUserStore = defineStore('user', () => {
     const res = await getUserInfoApi()
     userInfo.value = res
   }
-  return { userInfo, setUserInfo }
+  const removeUserInfo = () => {
+    userInfo.value = {}
+  }
+  return { userInfo, setUserInfo, removeUserInfo }
 })

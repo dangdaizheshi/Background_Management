@@ -17,3 +17,18 @@ export const getUserInfoApi = () => {
     method: 'post'
   })
 }
+
+export const logoutApi = () => {
+  return requset({
+    url: '/admin/logout',
+    method: 'post'
+  })
+}
+
+export const updatePasswordApi = (data) => {
+  return requset({
+    url: '/admin/updatepassword',
+    method: 'post',
+    data
+  })
+}

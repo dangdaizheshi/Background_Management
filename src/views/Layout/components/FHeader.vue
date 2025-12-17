@@ -25,12 +25,15 @@
         </div>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item>修改密码</el-dropdown-item>
+            <el-dropdown-item @click = "updatePassword()">修改密码</el-dropdown-item>
             <el-dropdown-item @click = "exit()">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
     </div>
+    <el-drawer v-model="drawer" title="修改密码" size="45%" close-on-click-modal="false">
+      <span>Hi there!</span>
+    </el-drawer>
   </div>
 </template>
 
@@ -40,10 +43,15 @@ import { ArrowDown, Fold, Orange, RefreshRight, FullScreen, ArrowUp, Aim } from 
 import notificationUtils from '../../../utils/notificationUtils';
 import { ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router';
+import { logoutApi, updatePasswordApi } from '../../../apis/login';
+import tokenUtils from '../../../utils/tokenUtil';
+import { useUserStore } from '../../../stores/user';
 
+const userStore = useUserStore();
 const userouter = useRouter();
 const circleUrl = ref('../../../assets/images/11.PNG');
 const isFullScreen = ref(false);
+const drawer = ref(false);
 function refresh() {
   location.reload();
 }
@@ -57,12 +65,16 @@ function toggleFullScreen() {
 }
 function exit() {
   notificationUtils.messageBox('warning', '确定要退出登录吗？').then(() => {
-    userouter.push('/login')
-    ElMessage({
-        type: 'success',
-        message: 'Delete completed',
-      })
+    logoutApi().finally(() => {
+      userStore.removeUserInfo();
+      tokenUtils.removeToken();
+      notificationUtils.toast('success', '退出登录成功');
+      userouter.push('/login');
+    })
   })
+}
+function updatePassword() {
+  
 }
 </script>
 

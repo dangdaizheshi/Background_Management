@@ -19,5 +19,8 @@ router.beforeEach((to, from, next) => {
         const userStore = useUserStore()
         userStore.setUserInfo()
     }
+    // 设置页面标题
+    let title: string = (to.meta.title ? to.meta.title : '') + '-后台管理系统'
+    document.title = title
     next()
 })
