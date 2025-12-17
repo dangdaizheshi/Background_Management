@@ -2,9 +2,11 @@ import router from "./router"
 import tokenUtils from "./utils/tokenUtil"
 import notificationUtils from "./utils/notificationUtils"
 import { useUserStore } from "./stores/user"
+import globalUtil from "./utils/globalUtil"
 
 // 全局前置路由守卫
 router.beforeEach((to, from, next) => {
+    globalUtil.showLoding()
     const token = tokenUtils.getToken()
     if (!token && to.path !== '/login') {
         notificationUtils.toast('error', '请先登录')
@@ -23,4 +25,8 @@ router.beforeEach((to, from, next) => {
     let title: string = (to.meta.title ? to.meta.title : '') + '-后台管理系统'
     document.title = title
     next()
+})
+
+router.afterEach(() => {
+    //globalUtil.hideLoding()
 })
