@@ -78,40 +78,6 @@ const userStore = useUserStore();
 const userouter = useRouter();
 const circleUrl = ref('../../../assets/images/11.PNG');
 const isFullScreen = ref(false);
-const drawer = ref(false);
-const formDrawerRef = ref(null)
-const loginForm = reactive({
-  password: '',
-  newPassword: '',
-  rePassword: ''
-})
-const formRef = ref()
-const rules = reactive({
-  password: [
-    { required: true, message: '请输入密码', trigger: 'blur' },
-    {
-      pattern: /^[a-zA-Z0-9_!@#$%^&*(),.?":{}|<>]+$/,
-      message: '密码只能包含数字、字母、标点符号和下划线',
-      trigger: 'blur'
-    }
-  ],
-  newPassword: [
-    { required: true, message: '请输入新密码', trigger: 'blur' },
-    {
-      pattern: /^[a-zA-Z0-9_!@#$%^&*(),.?":{}|<>]+$/,
-      message: '密码只能包含数字、字母、标点符号和下划线',
-      trigger: 'blur'
-    }
-  ],
-  rePassword: [
-    { required: true, message: '请输入新密码', trigger: 'blur' },
-    {
-      pattern: /^[a-zA-Z0-9_!@#$%^&*(),.?":{}|<>]+$/,
-      message: '密码只能包含数字、字母、标点符号和下划线',
-      trigger: 'blur'
-    }
-  ]
-})
 function refresh() {
   location.reload();
 }
@@ -123,6 +89,9 @@ function toggleFullScreen() {
   }
   isFullScreen.value = !isFullScreen.value;
 }
+
+const { updatePassword, formDrawerRef, loginForm, formRef, rules, repassword } = useRepassword();
+
 function exit() {
   notificationUtils.messageBox('warning', '确定要退出登录吗？').then(() => {
     logoutApi().finally(() => {
@@ -133,30 +102,66 @@ function exit() {
     })
   })
 }
-function updatePassword() {
-  drawer.value = true
-  formRef.value = {}
-  formDrawerRef.value.open()
-}
-const repassword = async () => { 
-  if (!formRef.value) return
-  await formRef.value.validate((valid, fields) => {
-    if (valid) {
-      updatePasswordApi(loginForm).then(() => { 
-        formDrawerRef.value.showLoading();
-        notificationUtils.toast('success', '修改密码成功');
-        drawer.value = false;
-        userStore.removeUserInfo();
-        tokenUtils.removeToken();
-        userouter.push('/login');
-      }).finally(() => {
-        formDrawerRef.value.hideLoading();
-      })
-    } 
-    else {
-      console.log('验证失败', fields)
-    }
+
+function useRepassword() {
+  const formDrawerRef = ref(null)
+  const loginForm = reactive({
+    password: '',
+    newPassword: '',
+    rePassword: ''
   })
+  const formRef = ref()
+  const rules = reactive({
+    password: [
+      { required: true, message: '请输入密码', trigger: 'blur' },
+      {
+        pattern: /^[a-zA-Z0-9_!@#$%^&*(),.?":{}|<>]+$/,
+        message: '密码只能包含数字、字母、标点符号和下划线',
+        trigger: 'blur'
+      }
+    ],
+    newPassword: [
+      { required: true, message: '请输入新密码', trigger: 'blur' },
+      {
+        pattern: /^[a-zA-Z0-9_!@#$%^&*(),.?":{}|<>]+$/,
+        message: '密码只能包含数字、字母、标点符号和下划线',
+        trigger: 'blur'
+      }
+    ],
+    rePassword: [
+      { required: true, message: '请输入新密码', trigger: 'blur' },
+      {
+        pattern: /^[a-zA-Z0-9_!@#$%^&*(),.?":{}|<>]+$/,
+        message: '密码只能包含数字、字母、标点符号和下划线',
+        trigger: 'blur'
+      }
+    ]
+  })
+  function updatePassword() {
+    formRef.value = {}
+    formDrawerRef.value.open()
+  }
+  const repassword = async () => { 
+    if (!formRef.value) return
+    await formRef.value.validate((valid, fields) => {
+      if (valid) {
+        updatePasswordApi(loginForm).then(() => { 
+          formDrawerRef.value.showLoading();
+          notificationUtils.toast('success', '修改密码成功');
+          formDrawerRef.value.close();
+          userStore.removeUserInfo();
+          tokenUtils.removeToken();
+          userouter.push('/login');
+        }).finally(() => {
+          formDrawerRef.value.hideLoading();
+        })
+      } 
+      else {
+        console.log('验证失败', fields)
+      }
+    })
+  }
+  return { updatePassword, formDrawerRef, loginForm, formRef, rules, repassword }
 }
 </script>
 
