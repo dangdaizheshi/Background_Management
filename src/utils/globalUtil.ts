@@ -1,5 +1,4 @@
 import nprogress from 'nprogress'
-
 const globleUtil = {
     showLoding() {
         nprogress.start()

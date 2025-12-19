@@ -31,7 +31,7 @@
         </template>
       </el-dropdown>
     </div>
-    <el-drawer v-model="drawer" title="修改密码" size="45%" close-on-click-modal="false">
+    <FormDrawer ref="formDrawerRef" title="修改密码" close-on-click-modal="true" @submit="repassword()">
       <el-form :model="loginForm" :rules="rules" ref="formRef" label-width="80px">
         <el-form-item prop="password" label="原密码">
           <el-input 
@@ -58,11 +58,8 @@
             placeholder="请确认新密码">
           </el-input>
         </el-form-item>
-        <el-form-item>
-          <el-button type="primary" :loading = "loading" @click="repassword()">提交</el-button>
-        </el-form-item>
       </el-form>
-    </el-drawer>
+    </FormDrawer>
   </div>
 </template> 
 
@@ -75,13 +72,14 @@ import { useRouter } from 'vue-router';
 import { logoutApi, updatePasswordApi } from '../../../apis/login';
 import tokenUtils from '../../../utils/tokenUtil';
 import { useUserStore } from '../../../stores/user';
+import FormDrawer from '../../../components/FormDrawer.vue';
 
 const userStore = useUserStore();
 const userouter = useRouter();
 const circleUrl = ref('../../../assets/images/11.PNG');
 const isFullScreen = ref(false);
 const drawer = ref(false);
-const loading = ref(false);
+const formDrawerRef = ref(null)
 const loginForm = reactive({
   password: '',
   newPassword: '',
@@ -136,21 +134,23 @@ function exit() {
   })
 }
 function updatePassword() {
-  drawer.value = true;
+  drawer.value = true
+  formRef.value = {}
+  formDrawerRef.value.open()
 }
 const repassword = async () => { 
   if (!formRef.value) return
   await formRef.value.validate((valid, fields) => {
     if (valid) {
       updatePasswordApi(loginForm).then(() => { 
-        loading.value = true;
+        formDrawerRef.value.showLoading();
         notificationUtils.toast('success', '修改密码成功');
         drawer.value = false;
         userStore.removeUserInfo();
         tokenUtils.removeToken();
         userouter.push('/login');
       }).finally(() => {
-        loading.value = false
+        formDrawerRef.value.hideLoading();
       })
     } 
     else {

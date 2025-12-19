@@ -27,6 +27,6 @@ router.beforeEach((to, from, next) => {
     next()
 })
 
-router.afterEach(() => {
-    //globalUtil.hideLoding()
+router.afterEach((to, from) => {
+    globalUtil.hideLoding()
 })
