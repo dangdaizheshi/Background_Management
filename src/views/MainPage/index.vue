@@ -3,6 +3,11 @@
     <!-- 左侧菜单 -->
      <div class="slider">
         <Logo />
+        <!-- 菜单区域 -->
+        <el-scrollbar class="scroll_bar">
+          <!-- 根据路由动态生成菜单 -->
+          <SideMenu :menuList="userStore.routesList"/>
+        </el-scrollbar>
      </div>
      <!-- 顶部导航 -->
       <div class="topbar">
@@ -15,19 +20,28 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import Logo from './components/Logo.vue';
+import SideMenu from './components/SideMenu.vue';
+import { useUserStore } from '../../stores/user';
+
+let userStore = useUserStore();
 </script>
 
 <style lang="scss" scoped>
 .main {
     width: 100%;
     height: 100vh;
+    color: white;
     .slider {
         width: $base-menu-width;
         height: 100vh;
         background-color: $base-menu-background-color;
+        .scroll_bar {
+            width: 100%;
+            height: calc(100vh - $base-menu-logo-height);
+        }
     }
     .topbar {
         position: fixed;

@@ -27,8 +27,17 @@ const router = createRouter({
     {
       path: '/layout',
       component: () => import('../views/MainPage/index.vue'),
+      children: [
+        {
+          path: 'home',
+          component: () => import('../views/Home/index.vue'),
+          meta: {
+            title: '主页',
+          }
+        }
+      ],
       meta: {
-        title: '布局页'
+        title: '布局页',
       }
     }
   ],
