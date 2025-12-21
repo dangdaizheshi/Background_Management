@@ -34,6 +34,13 @@ const router = createRouter({
           meta: {
             title: '主页',
           }
+        },
+        {
+          path: 'ceshi',
+          component: () => import('../views/Home/index.vue'),
+          meta: {
+            title: '测试',
+          }
         }
       ],
       meta: {

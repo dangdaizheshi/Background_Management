@@ -6,7 +6,9 @@
         <!-- 菜单区域 -->
         <el-scrollbar class="scroll_bar">
           <!-- 根据路由动态生成菜单 -->
-          <SideMenu :menuList="userStore.routesList"/>
+          <el-menu background-color="#001529" text-color="white">
+            <SideMenu :menuList="userStore.routesList"/>
+          </el-menu>
         </el-scrollbar>
      </div>
      <!-- 顶部导航 -->
@@ -41,6 +43,9 @@ let userStore = useUserStore();
         .scroll_bar {
             width: 100%;
             height: calc(100vh - $base-menu-logo-height);
+            .el-menu {
+                border-right: none;
+            }
         }
     }
     .topbar {
