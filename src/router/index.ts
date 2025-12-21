@@ -23,6 +23,13 @@ const router = createRouter({
       meta: {
         title: '无效页面'
       }
+    },
+    {
+      path: '/layout',
+      component: () => import('../views/MainPage/index.vue'),
+      meta: {
+        title: '布局页'
+      }
     }
   ],
   // 配置路由切换时页面自动回到顶部
