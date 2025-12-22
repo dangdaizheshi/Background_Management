@@ -4,12 +4,16 @@
         <!-- 没有子路由 -->
         <el-menu-item v-if="(!item.children || (item.children && item.children.length === 0))" :index="item.path">
           <el-icon><component :is="item.meta.icon"></component></el-icon>
-          <span>{{item.meta.title}}</span>
+          <template #title> 
+            <span>{{item.meta.title}}</span>
+          </template>
         </el-menu-item>
         <!-- 有 1 个子路由 -->
         <el-menu-item v-else-if="item.children.length === 1" :index="item.children[0].path">
           <el-icon><component :is="item.children[0].meta.icon"></component></el-icon>
-          <span>{{item.children[0].meta.title}}</span>
+          <template #title> 
+            <span>{{item.children[0].meta.title}}</span>
+          </template>
         </el-menu-item>
         <!-- 有 > 1 个子路由 -->
         <el-sub-menu v-else :index="item.path">

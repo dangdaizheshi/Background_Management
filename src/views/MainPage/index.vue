@@ -6,17 +6,17 @@
         <!-- 菜单区域 -->
         <el-scrollbar class="scroll_bar">
           <!-- 根据路由动态生成菜单 -->
-          <el-menu background-color="#001529" text-color="white" router :default-active="routeObj.path">
+          <el-menu background-color="#001529" text-color="white" router :default-active="routeObj.path" :collapse="settingsStore.isFold">
             <SideMenu :menuList="userStore.routesList"/>
           </el-menu>
         </el-scrollbar>
      </div>
      <!-- 顶部导航 -->
-      <div class="topbar">
+      <div class="topbar" :class="{fold: settingsStore.isFold ? true : false}">
         <Topbar />
       </div>
       <!-- 内容展示区 -->
-       <div class="content">
+       <div class="content" :class="{fold: settingsStore.isFold ? true : false}">
         <Content />
        </div>
   </div>
@@ -47,6 +47,7 @@ let settingsStore = useSettingsStore();
         height: 100vh;
         background-color: $base-menu-background-color;
         color: white;
+        transition: all 0.3s;
         .scroll_bar {
             width: 100%;
             height: calc(100vh - $base-menu-logo-height);
@@ -54,13 +55,22 @@ let settingsStore = useSettingsStore();
                 border-right: none;
             }
         }
+        &.fold {
+          width: $base-menu-min-width;
+        }
     }
+    
     .topbar {
         position: fixed;
         top: 0;
         left: $base-menu-width;
         width: calc(100% - $base-menu-width);
         height: $base-tabbar-height;
+        transition: all 0.3s;
+        &.fold {
+          width: calc(100% - $base-menu-min-width);
+          left: $base-menu-min-width;
+        }
     }
     .content {
         position: absolute;
@@ -71,6 +81,11 @@ let settingsStore = useSettingsStore();
         background-color: yellowgreen;
         padding: 20px;
         overflow-y: auto;
+        transition: all 0.3s;
+        &.fold {
+          width: calc(100% - $base-menu-min-width);
+          left: $base-menu-min-width;
+        }
     }
 }
 </style>

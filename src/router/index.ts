@@ -40,6 +40,7 @@ const router = createRouter({
         hidden: false,
         icon: 'Lock'
       },
+      redirect: '/acl/user',
       children: [
         {
           path: '/acl/user',
@@ -82,6 +83,7 @@ const router = createRouter({
         hidden: false,
         icon: 'Goods'
       },
+      redirect: '/product/trademark',
       children: [
         {
           path: '/product/trademark',

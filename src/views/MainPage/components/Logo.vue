@@ -25,6 +25,7 @@ import setting from '../../../setting';
     }
     p {
         font-size: $base-logo-title-size;
+        white-space: nowrap;
     }
 }
 </style>
