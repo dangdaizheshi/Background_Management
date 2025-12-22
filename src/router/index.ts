@@ -34,7 +34,7 @@ const router = createRouter({
     },
     {
       path: '/acl',
-      component: () => import('../views/Acl/index.vue'),
+      component: () => import('../views/MainPage/index.vue'),
       name: 'Name',
       meta: {
         title: '权限管理',
@@ -43,7 +43,7 @@ const router = createRouter({
       },
       children: [
         {
-          path: 'user',
+          path: '/acl/user',
           component: () => import('../views/Acl/User/index.vue'),
           name: 'Acl',
           meta: {
@@ -53,7 +53,7 @@ const router = createRouter({
           }
         },
         {
-          path: 'role',
+          path: '/acl/role',
           component: () => import('../views/Acl/Role/index.vue'),
           name: 'Role',
           meta: {
@@ -63,7 +63,7 @@ const router = createRouter({
           }
         }, 
         {
-          path: 'permiss',
+          path: '/acl/permiss',
           component: () => import('../views/Acl/Permiss/index.vue'),
           name: 'Permiss',
           meta: {
@@ -76,7 +76,7 @@ const router = createRouter({
     },
     {
       path: '/product',
-      component: () => import('../views/Product/index.vue'),
+      component: () => import('../views/MainPage/index.vue'),
       name: 'Product',
       meta: {
         title: '商品管理',
@@ -85,7 +85,7 @@ const router = createRouter({
       },
       children: [
         {
-          path: 'trademark',
+          path: '/product/trademark',
           component: () => import('../views/Product/Trademark/index.vue'),
           name: 'Trademark',
           meta: {
@@ -95,7 +95,7 @@ const router = createRouter({
           }
         },
         {
-          path: 'attr',
+          path: '/product/attr',
           component: () => import('../views/Product/Attr/index.vue'),
           name: 'Attr',
           meta: {
@@ -105,7 +105,7 @@ const router = createRouter({
           }
         },
         {
-          path: 'spu',
+          path: '/product/spu',
           component: () => import('../views/Product/Spu/index.vue'),
           name: 'Spu',
           meta: {
@@ -115,7 +115,7 @@ const router = createRouter({
           }
         },
         {
-          path: 'sku',
+          path: '/product/sku',
           component: () => import('../views/Product/Sku/index.vue'),
           name: 'Sku',
           meta: {
@@ -151,7 +151,7 @@ const router = createRouter({
       ],
       meta: {
         title: '布局页',
-        hidden: false,
+        hidden: true,
         icon: 'HomeFilled'
       }
     },

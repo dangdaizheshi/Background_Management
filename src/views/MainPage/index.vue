@@ -6,28 +6,32 @@
         <!-- 菜单区域 -->
         <el-scrollbar class="scroll_bar">
           <!-- 根据路由动态生成菜单 -->
-          <el-menu background-color="#001529" text-color="white" router>
+          <el-menu background-color="#001529" text-color="white" router :default-active="routeObj.path">
             <SideMenu :menuList="userStore.routesList"/>
           </el-menu>
         </el-scrollbar>
      </div>
      <!-- 顶部导航 -->
       <div class="topbar">
-
+        <Topbar />
       </div>
       <!-- 内容展示区 -->
        <div class="content">
-        <router-view />
+        <Content />
        </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRoute } from 'vue-router';
 import Logo from './components/Logo.vue';
 import SideMenu from './components/SideMenu.vue';
-import Screen from './components/Screen.vue';
+import Content from './components/Content.vue';
+import Topbar from './components/Topbar.vue';
 import { useUserStore } from '../../stores/user';
+
+let routeObj = useRoute();
 
 let userStore = useUserStore();
 </script>
@@ -55,7 +59,6 @@ let userStore = useUserStore();
         left: $base-menu-width;
         width: calc(100% - $base-menu-width);
         height: $base-tabbar-height;
-        background-color: red;
     }
     .content {
         position: absolute;
