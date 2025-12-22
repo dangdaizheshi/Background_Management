@@ -23,7 +23,6 @@
 
 <script setup lang="ts">
 const props = defineProps(['menuList'])
-console.log(props.menuList);
 </script>
 <script lang="ts">
 export default {

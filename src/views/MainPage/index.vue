@@ -6,7 +6,7 @@
         <!-- 菜单区域 -->
         <el-scrollbar class="scroll_bar">
           <!-- 根据路由动态生成菜单 -->
-          <el-menu background-color="#001529" text-color="white">
+          <el-menu background-color="#001529" text-color="white" router>
             <SideMenu :menuList="userStore.routesList"/>
           </el-menu>
         </el-scrollbar>
@@ -17,6 +17,7 @@
       </div>
       <!-- 内容展示区 -->
        <div class="content">
+        <router-view />
        </div>
   </div>
 </template>

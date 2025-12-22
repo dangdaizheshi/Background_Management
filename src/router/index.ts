@@ -16,7 +16,6 @@ const router = createRouter({
     {
       path: '/',
       component: () => import('../views/Layout/index.vue'),
-      name: 'Screen',
       meta: {
         title: '后台首页',
         hidden: false,
@@ -26,6 +25,7 @@ const router = createRouter({
     {
       path: '/screen',
       component: () => import('../views/Screen/index.vue'),
+      name: 'Screen',
       meta: {
         title: '数据大屏',
         hidden: false,
@@ -93,24 +93,45 @@ const router = createRouter({
             hidden: false,
             icon: 'ShoppingCartFull'
           }
+        },
+        {
+          path: 'attr',
+          component: () => import('../views/Product/Attr/index.vue'),
+          name: 'Attr',
+          meta: {
+            title: '属性管理',
+            hidden: false,
+            icon: 'Collection'
+          }
+        },
+        {
+          path: 'spu',
+          component: () => import('../views/Product/Spu/index.vue'),
+          name: 'Spu',
+          meta: {
+            title: 'SPU管理',
+            hidden: false,
+            icon: 'Calendar'
+          }
+        },
+        {
+          path: 'sku',
+          component: () => import('../views/Product/Sku/index.vue'),
+          name: 'Sku',
+          meta: {
+            title: 'SKU管理',
+            hidden: false,
+            icon: 'Orange'
+          }
         }
       ]
-    },
-    {
-      path: '/:pathMatch(.*)*',
-      component: () => import('../views/404/index.vue'),
-      meta: {
-        title: '无效页面',
-        hidden: true,
-        icon: 'MoreFilled'
-      }
     },
     {
       path: '/layout',
       component: () => import('../views/MainPage/index.vue'),
       children: [
         {
-          path: 'home',
+          path: '/home',
           component: () => import('../views/Home/index.vue'),
           meta: {
             title: '主页',
@@ -119,7 +140,7 @@ const router = createRouter({
           }
         },
         {
-          path: 'ceshi',
+          path: '/ceshi',
           component: () => import('../views/Home/index.vue'),
           meta: {
             title: '测试',
@@ -133,7 +154,16 @@ const router = createRouter({
         hidden: false,
         icon: 'HomeFilled'
       }
-    }
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      component: () => import('../views/404/index.vue'),
+      meta: {
+        title: '无效页面',
+        hidden: true,
+        icon: 'MoreFilled'
+      }
+    },
   ],
   // 配置路由切换时页面自动回到顶部
   scrollBehavior() {
