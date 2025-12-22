@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <!-- 左侧菜单 -->
-     <div class="slider">
+     <div class="slider" :class="{fold: settingsStore.isFold ? true : false}">
         <Logo />
         <!-- 菜单区域 -->
         <el-scrollbar class="scroll_bar">
@@ -30,10 +30,12 @@ import SideMenu from './components/SideMenu.vue';
 import Content from './components/Content.vue';
 import Topbar from './components/Topbar.vue';
 import { useUserStore } from '../../stores/user';
+import { useSettingsStore } from '../../stores/settings';
 
 let routeObj = useRoute();
 
 let userStore = useUserStore();
+let settingsStore = useSettingsStore();
 </script>
 
 <style lang="scss" scoped>
