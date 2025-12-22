@@ -40,11 +40,11 @@ let userStore = useUserStore();
 .main {
     width: 100%;
     height: 100vh;
-    color: white;
     .slider {
         width: $base-menu-width;
         height: 100vh;
         background-color: $base-menu-background-color;
+        color: white;
         .scroll_bar {
             width: 100%;
             height: calc(100vh - $base-menu-logo-height);
