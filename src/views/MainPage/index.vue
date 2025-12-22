@@ -17,7 +17,6 @@
       </div>
       <!-- 内容展示区 -->
        <div class="content">
-        <p style="height: 6000px; background: pink;">787887</p>
        </div>
   </div>
 </template>
@@ -26,6 +25,7 @@
 import { ref } from 'vue'
 import Logo from './components/Logo.vue';
 import SideMenu from './components/SideMenu.vue';
+import Screen from './components/Screen.vue';
 import { useUserStore } from '../../stores/user';
 
 let userStore = useUserStore();
@@ -62,7 +62,7 @@ let userStore = useUserStore();
         height: calc(100vh - $base-tabbar-height);
         top: $base-tabbar-height;
         left: $base-menu-width;
-        background-color: blue;
+        background-color: yellowgreen;
         padding: 20px;
         overflow-y: auto;
     }
