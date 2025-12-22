@@ -78,7 +78,6 @@ let settingsStore = useSettingsStore();
         height: calc(100vh - $base-tabbar-height);
         top: $base-tabbar-height;
         left: $base-menu-width;
-        background-color: yellowgreen;
         padding: 20px;
         overflow-y: auto;
         transition: all 0.3s;

@@ -1,5 +1,5 @@
 <template>
-    <el-button size="small" icon="Refresh" circle></el-button>
+    <el-button size="small" icon="Refresh" circle @click="updateRefsh()"></el-button>
     <el-button size="small" icon="FullScreen" circle></el-button>
     <el-button size="small" icon="Setting" circle></el-button>
     <img src="../../../../assets/images/11.PNG" alt="">
@@ -20,7 +20,13 @@
 </template>
 
 <script setup lang="ts">
+import { useSettingsStore } from '../../../../stores/settings';
 
+const settingsStore = useSettingsStore();
+
+const updateRefsh = () => {
+    settingsStore.toggleRefsh()
+}
 </script>
 
 <style lang="scss" scoped>

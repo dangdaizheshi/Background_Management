@@ -16,12 +16,12 @@ const app = createApp(App)
 app.use(createPinia())
 app.use(router)
 app.use(ElementPlus)
-app.use(ElementPlus, {
-  locale: zhCn,
-})
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   app.component(key, component)
 }
+app.use(ElementPlus, {
+  locale: zhCn,
+})
 app.component('SvgIcon', SvgIcon) // 全局组件注册
 
 import globalComponent from './components/index'

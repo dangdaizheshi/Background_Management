@@ -4,7 +4,7 @@
   </el-icon>
   <el-breadcrumb :separator-icon="ArrowRight">
     <el-breadcrumb-item v-for="(item, index) in routeObj.matched" :key="index" :to="item.path">
-      <el-icon style="margin: 0 5px;"><component :is="item.meta.icon"></component></el-icon>
+      <el-icon style="margin: 0 5px; vertical-align: top;"><component :is="item.meta.icon"></component></el-icon>
       <span>{{ item.meta.title }}</span>
     </el-breadcrumb-item>
   </el-breadcrumb>

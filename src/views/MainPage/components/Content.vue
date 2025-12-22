@@ -1,13 +1,23 @@
 <template>
   <router-view v-slot="{ Component }">
     <transition name="fade">
-        <component :is="Component" />
+        <component :is="Component" v-if="flag"/>
     </transition>
   </router-view>
 </template>
 
 <script setup lang="ts">
+import { watch, ref, nextTick} from 'vue';
+import { useSettingsStore } from '../../../stores/settings';
 
+const settingsStore = useSettingsStore();
+let flag = ref(true)
+watch(() => settingsStore.refsh, () => {
+  flag.value = false
+  nextTick(() => {
+    flag.value = true
+  })
+});
 </script>
 
 <style lang="scss" scoped>
