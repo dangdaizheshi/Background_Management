@@ -17,7 +17,7 @@
       <el-tooltip effect="dark" content="退出全屏" placement="bottom" v-else><el-icon class="toolbar-icon fullscreen-icon" @click = "toggleFullScreen()"><Aim /></el-icon></el-tooltip>
       <el-dropdown>
         <div class="el-dropdown-link">
-          <el-avatar class="user-avatar" :size="32" :src="circleUrl" />
+          <el-avatar class="user-avatar" :size="32" src="../../../assets/images/11.PNG" />
           <span class="username">当代哲师</span>
           <el-icon class="el-icon--right arrow-icon">
             <arrow-down />
@@ -65,7 +65,6 @@
 
 <script setup lang="ts">
 import { ref, reactive} from 'vue'
-import { ArrowDown, Fold, Orange, RefreshRight, FullScreen, ArrowUp, Aim } from '@element-plus/icons-vue'
 import notificationUtils from '../../../utils/notificationUtils';
 import { ElMessage} from 'element-plus'
 import { useRouter } from 'vue-router';
@@ -76,7 +75,6 @@ import FormDrawer from '../../../components/FormDrawer.vue';
 
 const userStore = useUserStore();
 const userouter = useRouter();
-const circleUrl = ref('../../../assets/images/11.PNG');
 const isFullScreen = ref(false);
 function refresh() {
   location.reload();
@@ -204,7 +202,7 @@ function useRepassword() {
       gap: 1px;
       
       .toolbar-icon {
-        font-size: 20px;
+        font-size: 32px;
         cursor: pointer;
         padding: 6px;
         border-radius: 4px;
@@ -224,6 +222,7 @@ function useRepassword() {
     gap: 20px;
     
     .fullscreen-icon {
+      font-size: 32px;
       cursor: pointer;
       padding: 6px;
       border-radius: 4px;

@@ -1,5 +1,5 @@
 <template>
-  <div class="topbar">
+  <div class="contain">
     <div class="le">
         <Breadcrumb />
     </div>
@@ -15,7 +15,7 @@ import UserSetting from './Topbar_component/UserSetting.vue';
 </script>
 
 <style lang="scss" scoped>
-.topbar {
+.contain {
     width: 100%;
     height: 100%;
     display: flex;
