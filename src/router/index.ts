@@ -19,7 +19,18 @@ const router = createRouter({
         title: '后台首页',
         hidden: false,
         icon: 'Avatar'
-      }
+      },
+      children: [
+        {
+          path: '/goods/list',
+          component: () => import('../views/Goods/index.vue'),
+          meta: {
+            title: '商品列表',
+            hidden: false,
+            icon: 'HomeFilled'
+          }
+        }
+      ]
     },
     {
       path: '/screen',
