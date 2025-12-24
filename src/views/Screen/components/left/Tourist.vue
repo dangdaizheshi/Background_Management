@@ -66,7 +66,7 @@ onMounted(() => {
       background: url('../../images/total.png') no-repeat;
       background-size: 100% 100%;
       color: $screen-color;
-      font-size: 24px;
+      font-size: 26px;
     }
   }
   .charts {

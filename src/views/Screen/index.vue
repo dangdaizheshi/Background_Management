@@ -58,6 +58,7 @@ window.onresize = () => {
       height: 40px;
     }
     .bottom {
+      padding: 0 40px;
       display: flex;
       .le {
         flex: 1;
@@ -72,7 +73,7 @@ window.onresize = () => {
         }
       }
       .ce {
-        flex: 2.3;
+        flex: 2.4;
       }
       .re {
         flex: 1;
