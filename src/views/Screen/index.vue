@@ -5,7 +5,11 @@
         <Top />
       </div>
       <div class="bottom">
-        <div class="le">左侧</div>
+        <div class="le">
+          <Tourist class="tourist" />
+          <Sex class="sex" />
+          <Age class="age" />
+        </div>
         <div class="ce">中间</div>
         <div class="re">右侧</div>
       </div>
@@ -16,6 +20,9 @@
 <script setup lang="ts">
 import {ref, onMounted} from 'vue'
 import Top from './components/Top.vue'
+import Tourist from './components/left/Tourist.vue'
+import Sex from './components/left/Sex.vue'
+import Age from './components/left/Age.vue'
 
 let screen = ref()
 onMounted(() => {
@@ -54,9 +61,18 @@ window.onresize = () => {
       display: flex;
       .le {
         flex: 1;
+        height: 1040px;
+        display: flex;
+        flex-direction: column;
+        .sex, .age {
+          flex: 1;
+        }
+        .tourist {
+          flex: 1.2;
+        }
       }
       .ce {
-        flex: 2;
+        flex: 2.3;
       }
       .re {
         flex: 1;
