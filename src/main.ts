@@ -9,7 +9,7 @@ import 'virtual:svg-icons-register'
 import SvgIcon from './components/SvgIcon/index.vue'
 import router from './router'
 import { createPinia } from 'pinia'
-import './permission'
+//import './permission'
 import 'nprogress/nprogress.css'
 
 const app = createApp(App)

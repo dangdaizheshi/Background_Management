@@ -23,11 +23,79 @@ onMounted(() => {
   // 获取 echarts 类的实例
   let myChart = echarts.init(charts.value)
   // 设置实例的配置项
-  myChart.setOption({
-    title: {
-      text: '水球图'
-    }
-  })
+const value = 0.6;
+const option = {
+   title: {
+      text: (value * 100).toFixed(0) + '{a|%}',
+      x: 'center',
+      y: 'center',
+      textStyle: {
+         fontSize: 40,
+         fontWeight: '700',
+         color: 'rgb(34,34,34)',
+         rich: {
+            a: {
+               fontSize: 16
+            }
+         }
+      }
+   },
+   series: [{
+      type: 'liquidFill',
+      radius: '80%',
+      data: [value, value],
+      outline: {
+         borderDistance: -1,
+         itemStyle: {
+            borderWidth: 20,
+            borderColor: {
+               type: 'linear',
+               x: 0,
+               y: 1,
+               x2: 0,
+               y2: 0,
+               colorStops: [{
+                  offset: 0,
+                  color: 'rgb(53,193,241)'
+               }, {
+                  offset: value,
+                  color: 'rgb(147,238,253)'
+               }, {
+                  offset: value + 0.1,
+                  color: 'rgb(223,247,255)'
+               }, {
+                  offset: 1,
+                  color: 'rgb(223,247,255)'
+               }],
+            },
+            shadowColor: 'rgba(53,193,241,0.3)'
+         }
+      },
+      itemStyle: {
+         shadowBlur: 0,
+      },
+      color: [{
+         type: 'linear',
+         x: 0,
+         y: 1,
+         x2: 0,
+         y2: 0,
+         colorStops: [{
+            offset: 0,
+            color: 'rgb(144,226,255)'
+         }, {
+            offset: 1,
+            color: 'rgb(231,249,255)'
+         }],
+      }],
+      label: {
+         formatter: ''
+      }
+   }]
+};
+
+
+myChart.setOption(option)
 })
 </script>
 
