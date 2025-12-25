@@ -10,7 +10,10 @@
           <Sex class="sex" />
           <Age class="age" />
         </div>
-        <div class="ce">中间</div>
+        <div class="ce">
+          <Map class="map" />
+          <Line class="line" />
+        </div>
         <div class="re">右侧</div>
       </div>
     </div>
@@ -23,6 +26,8 @@ import Top from './components/Top.vue'
 import Tourist from './components/left/Tourist.vue'
 import Sex from './components/left/Sex.vue'
 import Age from './components/left/Age.vue'
+import Map from './components/center/Map.vue'
+import Line from './components/center/Line.vue'
 
 let screen = ref()
 onMounted(() => {
@@ -74,6 +79,14 @@ window.onresize = () => {
       }
       .ce {
         flex: 2.4;
+        display: flex;
+        flex-direction: column;
+        .map {
+          flex: 3.5;
+        }
+        .line {
+          flex: 1;
+        }
       }
       .re {
         flex: 1;
