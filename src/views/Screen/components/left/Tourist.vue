@@ -71,7 +71,7 @@ onMounted(() => {
   }
   .charts {
     width: 100%;
-    height: 260px;
+    height: 250px;
   }
 }
 </style>
