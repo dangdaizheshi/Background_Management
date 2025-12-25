@@ -14,7 +14,11 @@
           <Map class="map" />
           <Line class="line" />
         </div>
-        <div class="re">右侧</div>
+        <div class="re">
+          <Rank class="rank" />
+          <Year class="year" />
+          <counter class="counter" />
+        </div>
       </div>
     </div>
   </div>
@@ -28,6 +32,9 @@ import Sex from './components/left/Sex.vue'
 import Age from './components/left/Age.vue'
 import Map from './components/center/Map.vue'
 import Line from './components/center/Line.vue'
+import Rank from './components/right/Rank.vue'
+import Year from './components/right/Year.vue'
+import counter from './components/right/counter.vue'
 
 let screen = ref()
 onMounted(() => {
@@ -82,14 +89,25 @@ window.onresize = () => {
         display: flex;
         flex-direction: column;
         .map {
-          flex: 3.5;
+          flex: 3;
         }
         .line {
-          flex: 1;
+          flex: 1.1;
         }
       }
       .re {
-        flex: 1;
+        flex: 1.2;
+        display: flex;
+        flex-direction: column;
+        .rank {
+          flex: 1.5;
+        }
+        .year {
+          flex: 1;
+        }
+        .counter {
+          flex: 1;
+        }
       }
     }
   }
