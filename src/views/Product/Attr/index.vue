@@ -3,14 +3,18 @@
   <div class="attr_ody">
     <el-card style="margin: 10px 0;">
       <div class="card_1" v-show="scene === 0">
-        <el-button type="primary" icon="Plus" @click="addAttr">添加属性</el-button>
-        <el-table border style="margin: 10px 0;">
+        <el-button type="primary" icon="Plus" @click="addAttr" :disabled="categoryStore.c3id ? false : true">添加属性</el-button>
+        <el-table border style="margin: 10px 0;" :data="attrList">
           <el-table-column label="序号" type="index" width="80px" align="center"></el-table-column>
-          <el-table-column label="属性名称" align="center" width="120px"></el-table-column>
-          <el-table-column label="属性值名称" align="center"></el-table-column>
-          <el-table-column label="操作" align="center" width="120px">
+          <el-table-column label="属性名称" align="center" width="120px" prop="attrName"></el-table-column>
+          <el-table-column label="属性值名称" align="center">
             <template #default="scope">
-              <el-button type="primary" icon="Edit" size="small" @click="updateTable"></el-button>
+              <el-tag v-for="item in scope.row.attrValueList" :key="item.id" style="margin: 5px;">{{ item.valueName }}</el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" align="center" width="140px">
+            <template #default="scope">
+              <el-button type="warning" icon="Edit" size="small" @click="updateTable"></el-button>
               <el-button type="danger" icon="Delete" size="small"></el-button>
             </template>
           </el-table-column>
@@ -36,11 +40,25 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import TopCategory from '../../../components/TopCategory.vue';
-import { ref } from 'vue';
-
+import { ref, watch } from 'vue';
+import { useCategoryStore } from '../../../stores/category';
+import {reqAttrList} from '../../../apis/product/attr/attr'
+import { ElMessage } from 'element-plus';
+import type { Attr, AttrResponseData } from '../../../apis/product/attr/type'
+const categoryStore = useCategoryStore()
 let scene = ref(0)
+const attrList = ref<Attr[]>([])
+
+watch(() => categoryStore.c3id, () => {
+  attrList.value = []
+  const {c1id, c2id, c3id} = categoryStore
+  if(!c3id) return
+  reqAttrList(c1id, c2id, c3id).then(res => {
+    attrList.value = res.data
+  }).catch(err => {ElMessage.error('获取属性列表失败')})
+})
 const addAttr = () => {
   scene.value = 1
 }
