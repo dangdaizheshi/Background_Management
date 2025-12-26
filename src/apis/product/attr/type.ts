@@ -15,7 +15,8 @@ export interface ResponseData {
 export interface AttrValue {
   id?: number,
   valueName: string,
-  attrId?: number
+  attrId?: number,
+  flag?: boolean
 }
 export interface Attr {
   id?: number,
