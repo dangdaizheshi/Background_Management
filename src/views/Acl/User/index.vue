@@ -12,8 +12,8 @@
   </el-card>
   <el-card style="margin: 15px 0;"> 
     <el-button type="primary" @click="addUser">添加用户</el-button>
-    <el-button type="warning">批量删除</el-button>
-    <el-table style="margin: 10px 0;" border :data="userArr">
+    <el-button type="warning" @click="deleteBatchUser" :disabled="deleteBatchArr.length ? false : true">批量删除</el-button>
+    <el-table style="margin: 10px 0;" border :data="userArr" @selection-change="handleSelectionChange">
       <el-table-column type="selection" align="center"></el-table-column>
       <el-table-column label="#" align="center" type="index"></el-table-column>
       <el-table-column label="id" align="center" prop="id"></el-table-column>
@@ -24,9 +24,13 @@
       <el-table-column label="更新时间" align="center" prop="updateTime" show-overflow-tooltip></el-table-column>
       <el-table-column label="操作" width="300px" align="center">
         <template #default="scope">
-          <el-button type="primary" size="small" icon="User" @click="updateRole">分配角色</el-button>
+          <el-button type="primary" size="small" icon="User" @click="updateRole(scope.row)">分配角色</el-button>
           <el-button type="danger" size="small" icon="Edit" @click="updateUser(scope.row)">编辑</el-button>
-          <el-button type="warning" size="small" icon="Delete">删除</el-button>
+          <el-popconfirm title="您确定要删除该用户吗？" @confirm="deleteUser(scope.row.id)">
+            <template #reference>
+              <el-button type="warning" size="small" icon="Delete">删除</el-button>
+            </template>
+          </el-popconfirm>
         </template>
       </el-table-column>
     </el-table>
@@ -48,13 +52,13 @@
     <template #default>
       <el-form>
         <el-form-item label="用户姓名">
-          <el-input></el-input>
+          <el-input v-model="userParams.username" disabled></el-input>
         </el-form-item>
         <el-form-item label="职位列表">
           <el-checkbox v-model="checkedAll" :indeterminate="indeterminate" @change="handleCheckAllChange">全选</el-checkbox>
-          <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
-            <el-checkbox v-for="(city, index) in cities" :label="city" :key="index">
-              {{ city }}
+          <el-checkbox-group v-model="checkedRoles" @change="handleCheckedCitiesChange">
+            <el-checkbox v-for="(item, index) in roles" :label="item" :key="index">
+              {{ item.roleName }}
             </el-checkbox>
           </el-checkbox-group>
         </el-form-item>
@@ -63,7 +67,7 @@
     <template #footer>
       <div style="flex: auto">
         <el-button @click="cancelClick">cancel</el-button>
-        <el-button type="primary" @click="confirmClick">confirm</el-button>
+        <el-button type="primary" @click="addRole">confirm</el-button>
       </div>
     </template>
   </el-drawer>
@@ -95,9 +99,8 @@
 
 <script setup lang="ts">
 import { ref, onMounted, reactive } from 'vue'
-import type { UserResponseData, User } from '../../../apis/acl/user/type'
-import {reqGetAllUser, reqAddOrUpdateUser} from '../../../apis/acl/user/index'
-import { el } from 'element-plus/es/locales.mjs'
+import type { UserResponseData, User, RoleResponseData, RoleData, addRoleData } from '../../../apis/acl/user/type'
+import {reqGetAllUser, reqAddOrUpdateUser, reqGetUserRoles, reqAssignRoles, reqDeleteUser, reqDeleteBatchUser} from '../../../apis/acl/user/index'
 import { ElMessage } from 'element-plus'
 let pageNo = ref<number>(1)
 let pageSize = ref<number>(10)
@@ -107,23 +110,28 @@ let checkedAll = ref<boolean>(false)
 let indeterminate = ref<boolean>(false)
 let total = ref<number>(0)
 let userArr = ref<User[]>([])
+// 这个数组存储要批量删除的用户id
+let deleteBatchArr = ref<number[]>([])
 const userParams = reactive<User>({
   username: '',
   name: '',
   password: ''
 })
 const formRef = ref()
-const cities = ['Shanghai', 'Beijing', 'Guangzhou', 'Shenzhen', 'Hangzhou', 'Wuhan', 'Nanjing', 'Chongqing', 'Tianjin', 'Kunming']
-const checkedCities = ref(['Shanghai', 'Beijing'])
+const roles = ref<RoleData[]>([])
+const checkedRoles = ref<RoleData[]>([])
 
+const handleSelectionChange = (val: User[]) => {
+  deleteBatchArr.value = val.map(item => item.id!)
+}
 const handleCheckAllChange = (val: boolean) => {
-  val ? (checkedCities.value = cities) : (checkedCities.value = [])
+  val ? (checkedRoles.value = roles.value) : (checkedRoles.value = [])
   indeterminate.value = false
 }
 const handleCheckedCitiesChange = (value: string[]) => {
   const checkedCount = value.length
-  checkedAll.value = checkedCount === cities.length
-  indeterminate.value = !(checkedCount > 0 && checkedCount < cities.length)
+  checkedAll.value = checkedCount === roles.value.length
+  indeterminate.value = !(checkedCount > 0 && checkedCount < roles.value.length)
 }
 const getAllUser = async (pager = 1) => {
   pageNo.value = pager
@@ -151,8 +159,40 @@ const updateUser = (row: User) => {
   Object.assign(userParams, row)
   drawer2.value = true
 }
-const updateRole = () => {
-  drawer1.value = true
+const deleteUser = async(id: number) => {
+  const res: any = await reqDeleteUser(id)
+  if (res.code === 200) {
+    ElMessage.success("删除成功")
+    getAllUser(userArr.value.length > 1 ? pageNo.value : pageNo.value - 1)
+  }
+}
+const deleteBatchUser = async() => {
+  const res: any = await reqDeleteBatchUser(deleteBatchArr.value)
+  if (res.code === 200) {
+    ElMessage.success("批量删除成功")
+    getAllUser()
+  }
+}
+const updateRole = async(row: User) => {
+  Object.assign(userParams, row)
+  const res: RoleResponseData = await reqGetUserRoles(row.id as number)
+  if (res.code === 200) {
+    roles.value = res.data.allRolesList
+    checkedRoles.value = res.data.assignRoles
+    drawer1.value = true
+  }
+}
+const addRole = async() => { 
+  const reqData: addRoleData = {
+    roleIdList: checkedRoles.value.map(item => item.id!),
+    userId: userParams.id!
+  }
+  const res: any = await reqAssignRoles(reqData)
+  if (res.code === 200) {
+    ElMessage.success("分配角色成功")
+    drawer1.value = false
+    getAllUser(pageNo.value)
+  }
 }
 const save = async() => {
   await formRef.value.validate()
