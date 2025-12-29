@@ -36,8 +36,8 @@
           <el-table-column label="序号" type="index" width="80px" align="center"></el-table-column>
           <el-table-column label="属性值名称" align="center">
             <template #default="scope">
-              <el-input v-if="scope.row.flag" @blur="tolook(scope.row, scope.$index)" size="small" placeholder="请输入属性值名称" v-model="scope.row.valueName"></el-input>
-              <div v-else @dblclick="showInput(scope)">{{scope.row.valueName}}</div>
+              <el-input :ref="(vc: any) => inputArr[scope.$index] = vc" v-if="scope.row.flag" @blur="tolook(scope.row, scope.$index)" size="small" placeholder="请输入属性值名称" v-model="scope.row.valueName"></el-input>
+              <div v-else @dblclick="showInput(scope.row, scope.$index)">{{scope.row.valueName}}</div>
             </template>
           </el-table-column>
           <el-table-column label="操作" align="center" width="120px"></el-table-column>
@@ -51,13 +51,14 @@
 
 <script setup lang="ts">
 import TopCategory from '../../../components/TopCategory.vue';
-import { ref, watch, reactive, onBeforeUnmount } from 'vue';
+import { ref, watch, reactive, onBeforeUnmount, nextTick } from 'vue';
 import { useCategoryStore } from '../../../stores/category';
 import {reqAttrList, reqAddOrUpdateAttr, reqDeleteAttr} from '../../../apis/product/attr/attr'
 import { ElMessage } from 'element-plus';
 import type { Attr, AttrResponseData, AttrValue } from '../../../apis/product/attr/type'
 const categoryStore = useCategoryStore()
 let scene = ref<number>(0)
+let inputArr = ref<any[]>([])
 const tagType: string[] = ['primary', 'success', 'warning', 'danger']
 const attrList = ref<Attr[]>([])
 let attrParams = reactive<Attr>({
@@ -92,6 +93,9 @@ const addAttrValue = () => {
     valueName: '',
     flag: true
   })
+  nextTick(() => { 
+    inputArr.value[attrParams.attrValueList.length - 1].focus()
+  })
 }
 const saveAttr = async() => { 
   const res = await reqAddOrUpdateAttr(attrParams)
@@ -121,8 +125,11 @@ const tolook = (row: AttrValue, $index: number) => {
   }
   row.flag = false
 }
-const showInput = (row: AttrValue) => { 
+const showInput = (row: AttrValue, id: number) => { 
   row.flag = true
+  nextTick(() => { 
+    inputArr.value[id].focus()
+  })
 }
 const updateTable = (row: Attr) => {
   Object.assign(attrParams, JSON.parse(JSON.stringify(row)))

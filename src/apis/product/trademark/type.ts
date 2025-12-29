@@ -18,3 +18,6 @@ export interface TradeMarkResponseData extends ResponseData {
         pages: number
     }
 }
+export interface AllTradeMarkResponseData extends ResponseData {
+  data: TradeMark[]
+}
