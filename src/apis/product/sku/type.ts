@@ -7,11 +7,13 @@ export interface ResponseData {
 }
 export interface SkuImg {
     id?: number,
-    imgName: string,
-    imgUrl: string,
+    imgName?: string,
+    imgUrl?: string,
     spuId: number,
     createTime: string,
-    updateTime: string
+    updateTime: string,
+    name?: string,
+    url?: string
 }
 export interface ImgResponse extends ResponseData {
     data: SkuImg[]

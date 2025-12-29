@@ -11,22 +11,22 @@
     </el-form>
   </el-card>
   <el-card style="margin: 15px 0;"> 
-    <el-button type="primary">添加用户</el-button>
+    <el-button type="primary" @click="addUser">添加用户</el-button>
     <el-button type="warning">批量删除</el-button>
-    <el-table style="margin: 10px 0;" border>
+    <el-table style="margin: 10px 0;" border :data="userArr">
       <el-table-column type="selection" align="center"></el-table-column>
-      <el-table-column label="#" align="center"></el-table-column>
-      <el-table-column label="id" align="center"></el-table-column>
-      <el-table-column label="用户名字" align="center"></el-table-column>
-      <el-table-column label="用户名称" align="center"></el-table-column>
-      <el-table-column label="用户角色" align="center"></el-table-column>
-      <el-table-column label="创建时间" align="center"></el-table-column>
-      <el-table-column label="更新时间" align="center"></el-table-column>
-      <el-table-column label="操作" width="260px" align="center">
+      <el-table-column label="#" align="center" type="index"></el-table-column>
+      <el-table-column label="id" align="center" prop="id"></el-table-column>
+      <el-table-column label="用户名字" align="center" prop="username" show-overflow-tooltip></el-table-column>
+      <el-table-column label="用户名称" align="center" prop="name" show-overflow-tooltip></el-table-column>
+      <el-table-column label="用户角色" align="center" prop="roleName" show-overflow-tooltip></el-table-column>
+      <el-table-column label="创建时间" align="center" prop="createTime" show-overflow-tooltip></el-table-column>
+      <el-table-column label="更新时间" align="center" prop="updateTime" show-overflow-tooltip></el-table-column>
+      <el-table-column label="操作" width="300px" align="center">
         <template #default="scope">
-          <el-button type="primary" size="mini">编辑</el-button>
-          <el-button type="danger" size="mini">删除</el-button>
-          <el-button type="warning" size="mini">分配角色</el-button>
+          <el-button type="primary" size="small" icon="User" @click="updateRole">分配角色</el-button>
+          <el-button type="danger" size="small" icon="Edit" @click="updateUser(scope.row)">编辑</el-button>
+          <el-button type="warning" size="small" icon="Delete">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -36,9 +36,9 @@
       :page-sizes="[3, 5, 7, 9]"
       background
       layout="prev, pager, next, jumper, ->, total, sizes"
-      :total="400"
+      :total="total"
       @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
+      @current-change="getAllUser"
     />
   </el-card>
   <el-drawer v-model="drawer1">
@@ -67,15 +67,52 @@
       </div>
     </template>
   </el-drawer>
+  <el-drawer v-model="drawer2">
+    <template #header>
+      <h4>{{ userParams.id ? "更新用户" : "添加用户" }}</h4>
+    </template>
+    <template #default>
+      <el-form :model="userParams" :rules="rules" ref="formRef">
+        <el-form-item label="用户姓名" prop="username">
+          <el-input placeholder="请您输入用户姓名" v-model="userParams.username"></el-input>
+        </el-form-item>
+        <el-form-item label="用户昵称" prop="name">
+          <el-input placeholder="请您输入用户昵称" v-model="userParams.name"></el-input>
+        </el-form-item>
+        <el-form-item label="用户密码" prop="password" v-show="!userParams.id">
+          <el-input placeholder="请您输入用户密码" v-model="userParams.password"></el-input>
+        </el-form-item>
+      </el-form>
+    </template>
+    <template #footer>
+      <div style="flex: auto">
+        <el-button @click="cancelClick">取消</el-button>
+        <el-button type="primary" @click="save">确定</el-button>
+      </div>
+    </template>
+  </el-drawer>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, reactive } from 'vue'
+import type { UserResponseData, User } from '../../../apis/acl/user/type'
+import {reqGetAllUser, reqAddOrUpdateUser} from '../../../apis/acl/user/index'
+import { el } from 'element-plus/es/locales.mjs'
+import { ElMessage } from 'element-plus'
 let pageNo = ref<number>(1)
 let pageSize = ref<number>(10)
-let drawer1 = ref<boolean>(true)
+let drawer1 = ref<boolean>(false)
+let drawer2 = ref<boolean>(false)
 let checkedAll = ref<boolean>(false)
 let indeterminate = ref<boolean>(false)
+let total = ref<number>(0)
+let userArr = ref<User[]>([])
+const userParams = reactive<User>({
+  username: '',
+  name: '',
+  password: ''
+})
+const formRef = ref()
 const cities = ['Shanghai', 'Beijing', 'Guangzhou', 'Shenzhen', 'Hangzhou', 'Wuhan', 'Nanjing', 'Chongqing', 'Tianjin', 'Kunming']
 const checkedCities = ref(['Shanghai', 'Beijing'])
 
@@ -88,6 +125,87 @@ const handleCheckedCitiesChange = (value: string[]) => {
   checkedAll.value = checkedCount === cities.length
   indeterminate.value = !(checkedCount > 0 && checkedCount < cities.length)
 }
+const getAllUser = async (pager = 1) => {
+  pageNo.value = pager
+  const res: UserResponseData = await reqGetAllUser(pageNo.value, pageSize.value)
+  if (res.code === 200) {
+    userArr.value = res.data.records
+    total.value = res.data.total
+  }
+}
+const handleSizeChange = () => {
+  getAllUser(1)
+}
+const addUser = () => {
+  Object.assign(userParams, {
+    id: 0,
+    username: '',
+    name: '',
+    password: ''
+  })
+  drawer2.value = true
+  formRef.value?.resetFields()
+}
+const updateUser = (row: User) => {
+  formRef.value?.clearValidate()
+  Object.assign(userParams, row)
+  drawer2.value = true
+}
+const updateRole = () => {
+  drawer1.value = true
+}
+const save = async() => {
+  await formRef.value.validate()
+  reqAddOrUpdateUser(userParams).then(res => {
+    ElMessage.success(userParams.id ? "修改成功" : "添加成功")
+    getAllUser(userParams.id ? pageNo.value : 1)
+    drawer2.value = false
+  }).catch(err => {
+    ElMessage.error(userParams.id ? "修改失败" : "添加失败")
+  })
+}
+const cancelClick = () => {
+  drawer1.value = false
+  drawer2.value = false
+}
+onMounted(() => {
+  getAllUser()
+})
+
+const validatorUsername = (rule: any, value: any, callback: any) => {
+  //用户名字|昵称,长度至少五位
+  if (value.trim().length >= 5) {
+    callback();
+  } else {
+    callback(new Error('用户名字至少五位'))
+  }
+}
+const validatorname = (rule: any, value: any, callback: any) => {
+  //用户名字|昵称,长度至少五位
+  if (value.trim().length >= 2) {
+    callback();
+  } else {
+    callback(new Error('用户昵称至少2位'))
+  }
+}
+const validatorpassword = (rule: any, value: any, callback: any) => {
+  //用户名字|昵称,长度至少五位
+  if (value.trim().length >= 6) {
+    callback();
+  } else {
+    callback(new Error('用户昵称至少6位'))
+  }
+}
+
+//表单校验的规则对象
+const rules = {
+  //用户名字
+  username: [{ required: true, trigger: 'blur', validator: validatorUsername }],
+  //用户昵称
+  name: [{ required: true, trigger: 'blur', validator: validatorname }],
+  password: [{ required: true, trigger: 'blur', validator: validatorpassword }],
+}
+
 </script>
 
 <style lang="scss" scoped>
