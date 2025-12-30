@@ -2,10 +2,10 @@
   <el-card style="height: 80px;">
     <el-form inline class="form">
       <el-form-item label="用户名">
-        <el-input placeholder="请输入用户名"></el-input>
+        <el-input placeholder="请输入用户名" v-model="inputData"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary">搜索</el-button>
+        <el-button type="primary" :disabled="!inputData" @click="search">搜索</el-button>
         <el-button>重置</el-button>
       </el-form-item>
     </el-form>
@@ -120,6 +120,7 @@ const userParams = reactive<User>({
 const formRef = ref()
 const roles = ref<RoleData[]>([])
 const checkedRoles = ref<RoleData[]>([])
+let inputData = ref<string>('')
 
 const handleSelectionChange = (val: User[]) => {
   deleteBatchArr.value = val.map(item => item.id!)
@@ -135,7 +136,7 @@ const handleCheckedCitiesChange = (value: string[]) => {
 }
 const getAllUser = async (pager = 1) => {
   pageNo.value = pager
-  const res: UserResponseData = await reqGetAllUser(pageNo.value, pageSize.value)
+  const res: UserResponseData = await reqGetAllUser(pageNo.value, pageSize.value, inputData.value)
   if (res.code === 200) {
     userArr.value = res.data.records
     total.value = res.data.total
@@ -207,6 +208,10 @@ const save = async() => {
 const cancelClick = () => {
   drawer1.value = false
   drawer2.value = false
+}
+const search = () => { 
+  getAllUser()
+  inputData.value = ''
 }
 onMounted(() => {
   getAllUser()

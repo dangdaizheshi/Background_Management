@@ -10,7 +10,7 @@ enum API {
   DELETEUSER_URL = '/admin/acl/user/remove',
   DELETEBATCHUSER_URL = '/admin/acl/user/batchRemove'
 }
-export const reqGetAllUser = (page: number, limit: number) => http.get<any, UserResponseData>(API.ALLUSER_URL + `${page}/${limit}`)
+export const reqGetAllUser = (page: number, limit: number, username: string) => http.get<any, UserResponseData>(API.ALLUSER_URL + `${page}/${limit}?username=${username}`)
 export const reqAddOrUpdateUser = (data: User) => {
   if (data.id) {
     return http.put<any, any>(API.UPDATEUSER_URL, data)

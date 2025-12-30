@@ -1,0 +1,35 @@
+import type { ResponseData, RoleData } from '../user/type'
+
+export interface AllRoleResponseData extends ResponseData {
+  data: {
+    records: RoleData[],
+    total: number,
+    size: number,
+    current: number,
+    orders: [],
+    optimizeCountSql: boolean,
+    hitCount: boolean,
+    countId: null,
+    maxLimit: null,
+    searchCount: boolean,
+    pages: number
+  }
+}
+
+export interface MunuData {
+  select: boolean
+  id:number,
+  createTime: string,
+  updateTime: string,
+  pid:number,
+  name: string,
+  code: string,
+  toCode: string,
+  type:number,
+  status: null,
+  level:number,
+  children?: MunuData[],
+}
+export interface MenuResponseData extends ResponseData {
+  data: MunuData[]
+}
