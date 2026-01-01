@@ -1,5 +1,5 @@
 <template>
-  <div></div>
+  <div>SkuForm</div>
 </template>
 
 <script setup>

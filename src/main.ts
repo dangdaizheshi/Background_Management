@@ -5,11 +5,12 @@ import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+import 'element-plus/theme-chalk/dark/css-vars.css'
 import 'virtual:svg-icons-register'
 import SvgIcon from './components/SvgIcon/index.vue'
 import router from './router'
 import { createPinia } from 'pinia'
-//import './permission'
+import './permission'
 import 'nprogress/nprogress.css'
 
 const app = createApp(App)

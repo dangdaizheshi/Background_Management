@@ -1,17 +1,17 @@
 <template>
   <div class="tag_list">
     <el-tabs
-      v-model="editableTabsValue"
+      v-model="activeTag"
       type="card"
       class="demo-tabs"
       closable
       @tab-remove="removeTab"
     >
       <el-tab-pane
-        v-for="item in editableTabs"
-        :key="item.name"
+        v-for="item in tagList"
+        :key="item.path"
         :label="item.title"
-        :name="item.name"
+        :name="item.path"
       >
       </el-tab-pane>
     </el-tabs>
@@ -39,36 +39,38 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-
+import { useRoute, onBeforeRouteUpdate } from 'vue-router'
 import type { TabPaneName } from 'element-plus'
 
-let tabIndex = 2
-const editableTabsValue = ref('2')
-const editableTabs = ref([
-  {
-    title: 'Tab 1',
-    name: '1',
-    content: 'Tab 1 content',
-  },
-  {
-    title: 'Tab 2',
-    name: '2',
-    content: 'Tab 2 content',
-  },
-])
+const route = useRoute()
 
+let tabIndex = 2
+const activeTag = ref(route.path)
+const tagList = ref([
+  {
+    title: '后台首页',
+    path: '/'
+  },
+  {
+    title: '商品管理',
+    path: '/goods/list'
+  }
+])
+onBeforeRouteUpdate((to, from) => {
+  console.log(to.meta.title);
+  
+})
 const addTab = (targetName: string) => {
   const newTabName = `${++tabIndex}`
-  editableTabs.value.push({
+  tagList.value.push({
     title: 'New Tab',
-    name: newTabName,
-    content: 'New Tab content',
+    path: '/'
   })
-  editableTabsValue.value = newTabName
+  activeTag.value = newTabName
 }
 const removeTab = (targetName: TabPaneName) => {
-  const tabs = editableTabs.value
-  let activeName = editableTabsValue.value
+  const tabs = tagList.value
+  let activeName = activeTag.value
   if (activeName === targetName) {
     tabs.forEach((tab, index) => {
       if (tab.name === targetName) {
@@ -80,8 +82,8 @@ const removeTab = (targetName: TabPaneName) => {
     })
   }
 
-  editableTabsValue.value = activeName
-  editableTabs.value = tabs.filter((tab) => tab.name !== targetName)
+  activeTag.value = activeName
+  tagList.value = tabs.filter((tab) => tab.name !== targetName)
 }
 </script>
 

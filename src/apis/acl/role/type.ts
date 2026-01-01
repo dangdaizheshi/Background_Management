@@ -16,7 +16,7 @@ export interface AllRoleResponseData extends ResponseData {
   }
 }
 
-export interface MunuData {
+export interface MenuData {
   select: boolean
   id:number,
   createTime: string,
@@ -28,8 +28,8 @@ export interface MunuData {
   type:number,
   status: null,
   level:number,
-  children?: MunuData[],
+  children?: MenuData[],
 }
 export interface MenuResponseData extends ResponseData {
-  data: MunuData[]
+  data: MenuData[]
 }

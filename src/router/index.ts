@@ -33,6 +33,15 @@ const router = createRouter({
       ]
     },
     {
+      path: '/first',
+      component: () => import('../views/FirstPage/index.vue'),
+      meta: {
+        title: '首页',
+        hidden: false,
+        icon: 'HomeFilled'
+      }
+    },
+    {
       path: '/screen',
       component: () => import('../views/Screen/index.vue'),
       name: 'Screen',

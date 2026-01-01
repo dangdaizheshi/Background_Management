@@ -67,7 +67,7 @@ import { ElMessage, type UploadProps } from 'element-plus'
 
 let currentPage = ref<number>(1)
 let pageSize = ref<number>(3)
-let trademarkList = ref<TradeMark>([])
+let trademarkList = ref<TradeMark[]>([])
 let total = ref<number>(0)
 let dialogFormVisable = ref<boolean>(false)
 let dialogTitle = ref<string>('添加品牌')

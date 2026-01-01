@@ -11,18 +11,18 @@
     </el-form>
   </el-card>
   <el-card style="margin: 15px 0;"> 
-    <el-button type="primary" @click="addUser" icon="Plus">添加角色</el-button>
-    <el-table style="margin: 10px 0;" border :data="roleArr" @selection-change="handleSelectionChange">
+    <el-button type="primary" icon="Plus" @click="addRole">添加职位</el-button>
+    <el-table style="margin: 10px 0;" border :data="roleArr">
       <el-table-column label="#" align="center" type="index"></el-table-column>
       <el-table-column label="id" align="center" prop="id"></el-table-column>
-      <el-table-column label="用户名称" align="center" prop="roleName" show-overflow-tooltip></el-table-column>
+      <el-table-column label="职位名称" align="center" prop="roleName" show-overflow-tooltip></el-table-column>
       <el-table-column label="创建时间" align="center" prop="createTime" show-overflow-tooltip></el-table-column>
       <el-table-column label="更新时间" align="center" prop="updateTime" show-overflow-tooltip></el-table-column>
       <el-table-column label="操作" width="300px" align="center">
         <template #default="scope">
           <el-button type="primary" size="small" icon="User" @click="assignRole(scope.row)">分配权限</el-button>
-          <el-button type="danger" size="small" icon="Edit" @click="updateUser(scope.row)">编辑</el-button>
-          <el-popconfirm title="您确定要删除该用户吗？" @confirm="deleteUser(scope.row.id)">
+          <el-button type="danger" size="small" icon="Edit" @click="updateRole(scope.row)">编辑</el-button>
+          <el-popconfirm title="您确定要删除该职位吗？" @confirm="deleteRole(scope.row.id)">
             <template #reference>
               <el-button type="warning" size="small" icon="Delete">删除</el-button>
             </template>
@@ -64,23 +64,37 @@
       </div>
     </template>
   </el-drawer>
+  <el-dialog v-model="dialogFormVisible" :title="addRolePArams.id ? '修改职位' : '添加职位'">
+    <el-form style="margin: 10px 0;" ref="foemRef">
+     <el-form-item label="职位名">
+       <el-input placeholder="请输入职位名" v-model="addRolePArams.roleName"></el-input>
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <el-button @click="dialogFormVisible = false">取消</el-button>
+      <el-button type="primary" @click="addOrupdateRole">确认</el-button>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import type {AllRoleResponseData, MenuResponseData, MunuData} from '../../../apis/acl/role/type'
+import type {AllRoleResponseData, MenuResponseData, MenuData} from '../../../apis/acl/role/type'
 import type {RoleData} from '../../../apis/acl/user/type'
-import {reqGetAllRole, reqGetAllPermission, reqSetPermission} from '../../../apis/acl/role/index'
+import {reqGetAllRole, reqGetAllPermission, reqSetPermission, reqAddOrUpdateRole, reqDeleteRole} from '../../../apis/acl/role/index'
 import { ElMessage } from 'element-plus'
+const dialogFormVisible = ref<boolean>(false)
 const drawer = ref<boolean>(false)
 const pageNo = ref<number>(1)
 const pageSize = ref<number>(7)
 const total = ref<number>(0)
 const inputData = ref<string>('')
 const roleArr = ref<RoleData[]>([])
-let roleParams = ref<RoleData>({})
+let roleParams = ref<RoleData>({} as RoleData)
 let selectedMenuArr = ref<number[]>([])
 let tree = ref<any>()
+let addRolePArams = ref<RoleData>({} as RoleData) 
+const formRef = ref<any>()
 const getAllRole = async (pager = 1) => {
   pageNo.value = pager
   const res: AllRoleResponseData = await reqGetAllRole(pageNo.value, pageSize.value, inputData.value)
@@ -99,10 +113,32 @@ const assignRole = async (role: RoleData) => {
     drawer.value = true
   }
 }
-
+const addRole = () => { 
+  addRolePArams.value = ({} as RoleData)
+  dialogFormVisible.value = true
+}
+const updateRole = (role: RoleData) => { 
+  Object.assign(addRolePArams.value, role)
+  dialogFormVisible.value = true
+}
+const addOrupdateRole = async () => {
+  const res: any = await reqAddOrUpdateRole(addRolePArams.value)
+  if (res.code === 200) {
+    ElMessage.success(addRolePArams.value.id ? '修改成功' : '添加成功')
+    getAllRole(addRolePArams.value.id ? pageNo.value : 1)
+    dialogFormVisible.value = false
+  }
+}
+const deleteRole = async (id: number) => {
+  const res: any = await reqDeleteRole(id)
+  if (res.code === 200) {
+    ElMessage.success('删除成功')
+    getAllRole(roleArr.value.length > 1 ? pageNo.value : pageNo.value - 1)
+  }
+}
 // 树形组件部分
-let menuArr = ref<MunuData[]>([])
-const dfsMenuArr = (nowData: MunuData[]) => {
+let menuArr = ref<MenuData[]>([])
+const dfsMenuArr = (nowData: MenuData[]) => {
   nowData.forEach(item => {
     if (item.children) {
       dfsMenuArr(item.children)

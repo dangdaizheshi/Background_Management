@@ -22,7 +22,7 @@ import UserSetting from './Topbar_component/UserSetting.vue';
     justify-content: space-between;
     align-items: center;
     padding: 0 20px;
-    background-image: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
+    //background-image: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
     .le {
         display: flex;
     }

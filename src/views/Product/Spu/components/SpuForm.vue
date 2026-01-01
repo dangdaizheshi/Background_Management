@@ -68,7 +68,7 @@ const allTradeMark = ref<TradeMark[]>([])
 const allImgList = ref<SkuImg[]>([])
 const saleAttr = ref<any>([])
 const allSaleAttr = ref<any>([])
-const spuParams = ref<SpuData>({})
+const spuParams = ref<SpuData>({} as SpuData)
 const dialogVisible = ref<boolean>(false)
 const dialogImageUrl = ref<string>('')
 
@@ -84,7 +84,7 @@ const initSpuData = async(spu: SpuData) => {
     return {
         name: item.imgName,
         url: item.imgUrl
-    }
+    } as SkuImg
   })
   saleAttr.value = res3.data
   allSaleAttr.value = res4.data
